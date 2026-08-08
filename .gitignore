@@ -1,0 +1,35 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+*.env
+*.env.*
+!.env.example   # optionally allow an example file
+
+# Dependency directories (Node, Python, etc.)
+node_modules/
+venv/
+env/
+.venv/
+__pycache__/
+*.pyc
+
+# Build outputs
+dist/
+build/
+out/
+*.log
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# IDE / editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Misc
+*.tmp
+*.temp
