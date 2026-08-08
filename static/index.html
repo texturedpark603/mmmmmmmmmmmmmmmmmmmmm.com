@@ -1,1 +1,67 @@
-^_^
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>m</title>
+  <link rel="icon" href="https://web.archive.org/web/20231216025740im_/https://heroin.gg/moon.png">
+  <meta name="theme-color" content="#0a0a0a">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:image" content="https://web.archive.org/web/20231216025740im_/https://cdn.heroin.gg/mq.png">
+  <link rel="stylesheet" href="./css/index.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <main class="container">
+    <div class="card profile-card">
+      <img src="https://api.lanyard.rest/1442791669220249631.png" class="avatar" alt="m's avatar">
+      <div class="profile-info">
+        <h1 class="name">m</h1>
+        <p class="bio">i know too much</p>
+      </div>
+    </div>
+
+    <div class="card song-card">
+      <img class="album-art" src="" alt="album art">
+      <div class="track-info">
+        <span class="track-name">—</span>
+        <span class="track-artist">—</span>
+      </div>
+    </div>
+
+    <nav class="card links-card">
+      <a href="https://xboxgamertag.com/search/iaaf" class="link-btn" target="_blank" rel="noopener noreferrer">xbox</a>
+      <a href="https://t.me/gothwhore" class="link-btn" target="_blank" rel="noopener noreferrer">telegram</a>
+      <a href="https://discordlookup.com/user/1024824598757384202" class="link-btn" target="_blank" rel="noopener noreferrer">discord</a>
+      <a href="mailto:eboy@esex.services" class="link-btn">email</a>
+    </nav>
+  </main>
+
+  <script>
+    async function loadTrack() {
+      try {
+        const res = await fetch('/api/now-playing');
+        if (!res.ok) return;
+        const track = await res.json();
+
+        const art = document.querySelector('.album-art');
+        const name = document.querySelector('.track-name');
+        const artist = document.querySelector('.track-artist');
+
+        if (track.song) {
+          name.textContent = track.song;
+          artist.textContent = track.artist;
+          if (track.cover_url) art.src = track.cover_url;
+        }
+      } catch (_) {}
+    }
+
+    loadTrack();
+    setInterval(loadTrack, 30000);
+  </script>
+
+</body>
+</html>

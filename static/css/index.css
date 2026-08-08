@@ -1,0 +1,179 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --background: #0a0a0a;
+  --surface: rgba(15, 15, 15, 0.75);
+  --raised: #1a1a1a;
+  --text: #e8e8e8;
+  --faded: #666666;
+  --corner: 10px;
+  --corner-large: 16px;
+  --speed: 0.2s ease;
+}
+
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #222; border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: #333; }
+
+::selection { background: #1e1e1e; color: var(--text); }
+::-moz-selection { background: #1e1e1e; color: var(--text); }
+
+html, body {
+  background-color: var(--background);
+  color: var(--text);
+  font-family: 'JetBrains Mono', monospace;
+  min-height: 100vh;
+}
+
+a { text-decoration: none; color: inherit; }
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  width: 100%;
+  max-width: 480px;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 48px 24px;
+}
+
+.card {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid transparent;
+  border-radius: var(--corner-large);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.profile-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 22px;
+}
+
+.avatar {
+  width: 88px;
+  height: 88px;
+  border-radius: var(--corner);
+  border: 1px solid transparent;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--raised);
+}
+
+.profile-info {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  overflow: hidden;
+}
+
+.name {
+  font-size: 1.3rem;
+  font-weight: 600;
+  letter-spacing: -0.3px;
+  color: var(--text);
+  line-height: 1;
+}
+
+.bio {
+  font-size: 0.9rem;
+  color: var(--faded);
+  line-height: 1.4;
+}
+
+.song-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px;
+}
+
+.album-art {
+  width: 68px;
+  height: 68px;
+  border-radius: var(--corner);
+  border: 1px solid transparent;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: var(--raised);
+}
+
+.track-info {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  overflow: hidden;
+  flex: 1;
+}
+
+.track-name {
+  font-size: 0.95rem;
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text);
+}
+
+.track-artist {
+  font-size: 0.82rem;
+  color: var(--faded);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.links-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  padding: 14px;
+}
+
+.link-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 0;
+  font-size: 0.92rem;
+  font-weight: 500;
+  background: rgba(20, 20, 20, 0.8);
+  border: 1px solid transparent;
+  border-radius: var(--corner);
+  color: var(--faded);
+  transition: background var(--speed), color var(--speed);
+}
+
+.link-btn:hover,
+.link-btn:focus-visible {
+  background: var(--raised);
+  color: var(--text);
+  outline: none;
+}
+
+@media (max-width: 480px) {
+  .container {
+    max-width: 100%;
+    padding: 32px 16px;
+  }
+
+  .avatar {
+    width: 72px;
+    height: 72px;
+  }
+
+  .name {
+    font-size: 1.1rem;
+  }
+}
