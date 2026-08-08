@@ -1,48 +1,33 @@
 package main
 
 import (
-	"bufio"
 	"log"
 	"net/http"
-	"os"
-	"strings"
 
 	"m/api/lastfm"
+	"m/config"
+	"m/middleware"
 )
 
-func readEnv(path string) {
-	file, err := os.Open(path)
-	if err != nil {
-		return
-	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		line := strings.TrimSpace(scanner.Text())
-		if line == "" || strings.HasPrefix(line, "#") {
-			continue
-		}
-		parts := strings.SplitN(line, "=", 2)
-		if len(parts) != 2 {
-			continue
-		}
-		key := strings.TrimSpace(parts[0])
-		val := strings.TrimSpace(parts[1])
-		if os.Getenv(key) == "" {
-			os.Setenv(key, val)
-		}
-	}
-}
-
 func main() {
-	readEnv(".env")
+	cfg := config.Load(".env")
 
-	http.HandleFunc("/api/now-playing", lastfm.Handler)
+	if !cfg.Valid() {
+		log.Fatal("LASTFM_API_KEY is not set")
+	}
+
+	mux := http.NewServeMux()
+
+	mux.Handle("/api/now-playing", lastfm.NewHandler(cfg))
 
 	files := http.FileServer(http.Dir("./static"))
-	http.Handle("/", files)
+	mux.Handle("/", files)
 
-	log.Println("listening on http://localhost:8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	handler := middleware.Chain(mux,
+		middleware.Logger,
+		middleware.CORS,
+	)
+
+	log.Printf("listening on http://localhost:%s", cfg.Port)
+	log.Fatal(http.ListenAndServe(":"+cfg.Port, handler))
 }

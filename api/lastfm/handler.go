@@ -6,7 +6,10 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"os"
+	"time"
+
+	"m/cache"
+	"m/config"
 )
 
 type track struct {
@@ -29,7 +32,7 @@ type recentTracks struct {
 	Tracks []track `xml:"track"`
 }
 
-type response struct {
+type lfmResponse struct {
 	RecentTracks recentTracks `xml:"recenttracks"`
 }
 
@@ -40,47 +43,64 @@ type nowPlaying struct {
 	IsPlaying bool   `json:"is_playing"`
 }
 
-func Handler(w http.ResponseWriter, r *http.Request) {
-	apiKey := os.Getenv("LASTFM_API_KEY")
-	if apiKey == "" {
-		http.Error(w, "missing api key", http.StatusInternalServerError)
+const cacheKey = "now-playing"
+
+type Handler struct {
+	cfg   *config.Config
+	store *cache.Cache
+}
+
+func NewHandler(cfg *config.Config) *Handler {
+	return &Handler{
+		cfg:   cfg,
+		store: cache.New(30 * time.Second),
+	}
+}
+
+func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if cached, ok := h.store.Get(cacheKey); ok {
+		w.Header().Set("Content-Type", "application/json")
+		json.NewEncoder(w).Encode(cached)
 		return
 	}
 
-	username := os.Getenv("LASTFM_USER")
-	if username == "" {
-		username = "qm"
+	result, err := h.fetch()
+	if err != nil {
+		http.Error(w, "could not fetch track", http.StatusBadGateway)
+		return
 	}
 
+	h.store.Set(cacheKey, result)
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(result)
+}
+
+func (h *Handler) fetch() (*nowPlaying, error) {
 	endpoint := fmt.Sprintf(
 		"https://ws.audioscrobbler.com/2.0/?method=user.getRecentTracks&user=%s&api_key=%s&format=xml&limit=1",
-		username, apiKey,
+		h.cfg.LastFMUser, h.cfg.LastFMKey,
 	)
 
 	resp, err := http.Get(endpoint) //nolint:gosec
 	if err != nil {
-		http.Error(w, "could not reach last.fm", http.StatusBadGateway)
-		return
+		return nil, err
 	}
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		http.Error(w, "could not read response", http.StatusInternalServerError)
-		return
+		return nil, err
 	}
 
-	var parsed response
+	var parsed lfmResponse
 	if err := xml.Unmarshal(body, &parsed); err != nil {
-		http.Error(w, "could not parse response", http.StatusInternalServerError)
-		return
+		return nil, err
 	}
 
 	tracks := parsed.RecentTracks.Tracks
 	if len(tracks) == 0 {
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(nowPlaying{})
-		return
+		return &nowPlaying{}, nil
 	}
 
 	latest := tracks[0]
@@ -93,14 +113,10 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	out := nowPlaying{
+	return &nowPlaying{
 		Song:      latest.Name,
 		Artist:    latest.Artist.Name,
 		CoverURL:  cover,
 		IsPlaying: latest.NowPlaying == "true",
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Cache-Control", "no-cache")
-	json.NewEncoder(w).Encode(out)
+	}, nil
 }
