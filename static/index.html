@@ -4,66 +4,260 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>m</title>
-  <link rel="icon" href="https://mq6.pw/moon.png">
+  <link rel="icon" href="https://mq6.pw/feather.png">
   <meta name="theme-color" content="#0a0a0a">
-  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mmmmmmmmmmmmmmmmmmmmm.com">
+  <meta property="og:title" content="m">
+  <meta property="og:description" content="i know too much">
   <meta property="og:image" content="https://mq6.pw/site.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="m">
+  <meta name="twitter:description" content="i know too much">
+  <meta name="twitter:image" content="https://mq6.pw/site.png">
   <link rel="stylesheet" href="./css/index.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <body>
 
-  <main class="container">
-    <div class="card profile-card">
-      <img src="https://api.lanyard.rest/1442791669220249631.png" class="avatar" alt="m's avatar">
-      <div class="profile-info">
+  <div class="loader" id="loader">
+    <div class="loader-inner">
+      <img src="https://mq6.pw/cock.gif" class="loader-gif" alt="">
+      <div class="loader-right">
+        <span class="loader-name">m</span>
+        <span class="loader-label" id="loader-label">loading</span>
+        <div class="loader-bar-wrap">
+          <div class="loader-bar" id="loader-bar"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <span class="visitor-count" id="visitor-count">—</span>
+
+  <main class="page" id="page" style="opacity:0">
+
+    <header class="hero">
+      <div class="avatar-wrap">
+        <img src="https://api.lanyard.rest/1442791669220249631.png" class="avatar" alt="avatar" id="avatar">
+      </div>
+      <div class="hero-text">
         <h1 class="name">m</h1>
         <p class="bio">i know too much</p>
       </div>
-    </div>
+    </header>
 
-    <div class="card song-card">
-      <img class="album-art" src="" alt="album art">
-      <div class="track-info">
-        <span class="track-name">—</span>
-        <span class="track-artist">—</span>
+    <section class="now-playing" id="now-playing">
+      <div class="np-art-wrap">
+        <img class="np-art" id="np-art" src="" alt="">
       </div>
-    </div>
+      <div class="np-info">
+        <span class="np-label" id="np-label">not listening</span>
+        <span class="np-song" id="np-song"></span>
+        <span class="np-artist" id="np-artist"></span>
+        <div class="np-bar-wrap" id="np-bar-wrap">
+          <div class="np-bar" id="np-bar"></div>
+        </div>
+      </div>
+    </section>
 
-    <nav class="card links-card">
-      <a href="https://www.last.fm/user/QM" class="link-btn" target="_blank" rel="noopener noreferrer">last.fm</a>
-      <a href="https://www.roblox.com/users/5360735/profile" class="link-btn" target="_blank" rel="noopener noreferrer">roblox</a>
-      <a href="https://api.vaultcord.com/webhooks/public-lookup/1442791669220249631" class="link-btn" target="_blank" rel="noopener noreferrer">discord</a>
-      <a href="mailto:pew@outlook.com" class="link-btn">email</a>
+    <section class="activity-row" id="activity-row" style="display:none">
+      <span class="activity-text" id="activity-text"></span>
+    </section>
+
+    <nav class="links">
+      <a href="https://www.last.fm/user/QM" class="link" target="_blank" rel="noopener noreferrer">
+        <span class="link-label">last.fm</span>
+        <span class="link-arrow">↗</span>
+      </a>
+      <a href="https://www.roblox.com/users/5360735/profile" class="link" target="_blank" rel="noopener noreferrer">
+        <span class="link-label">roblox</span>
+        <span class="link-arrow">↗</span>
+      </a>
+      <a href="discord://-/users/1442791669220249631" class="link" target="_blank" rel="noopener noreferrer">
+        <span class="link-label">discord</span>
+        <span class="link-arrow">↗</span>
+      </a>
+      <a href="mailto:pew@outlook.com" class="link">
+        <span class="link-label">email</span>
+        <span class="link-arrow">↗</span>
+      </a>
     </nav>
+
   </main>
 
   <script>
-    async function loadTrack() {
-      try {
-        const res = await fetch('/api/now-playing');
-        if (!res.ok) return;
-        const track = await res.json();
+    const loaderBar   = document.getElementById('loader-bar');
+    const loaderLabel = document.getElementById('loader-label');
+    const loader      = document.getElementById('loader');
+    const page        = document.getElementById('page');
 
-        const art = document.querySelector('.album-art');
-        const name = document.querySelector('.track-name');
-        const artist = document.querySelector('.track-artist');
+    const MINIMUM_MS = 3200;
+    const loadStart  = Date.now();
 
-        if (track.song) {
-          name.textContent = track.song;
-          artist.textContent = track.artist;
-          if (track.cover_url) art.src = track.cover_url;
-        }
-      } catch (_) {}
+    let progress = 0;
+
+    function setProgress(pct, label) {
+      progress = Math.max(progress, pct);
+      loaderBar.style.width = progress + '%';
+      if (label) loaderLabel.textContent = label;
     }
 
-    loadTrack();
-    setInterval(loadTrack, 30000);
+    function finishLoading() {
+      setProgress(100, 'done');
+      const elapsed   = Date.now() - loadStart;
+      const remaining = Math.max(0, MINIMUM_MS - elapsed);
+      setTimeout(() => {
+        loader.classList.add('loader--out');
+        page.style.transition = 'opacity 0.6s ease';
+        page.style.opacity = '1';
+        setTimeout(() => loader.remove(), 700);
+      }, remaining + 200);
+    }
 
-    tick();
-    setInterval(tick, 1000);
+    let fontsReady    = false;
+    let visitorsReady = false;
+    let presenceReady = false;
+
+    function checkDone() {
+      if (fontsReady && visitorsReady && presenceReady) finishLoading();
+    }
+
+    setProgress(3, 'loading');
+    setTimeout(() => setProgress(10, 'loading fonts'), 200);
+
+    document.fonts.ready.then(() => {
+      fontsReady = true;
+      setProgress(38, 'fonts ready');
+      setTimeout(() => checkDone(), 0);
+    });
+
+    async function loadVisitors() {
+      try {
+        setProgress(42, 'fetching visitors');
+        const res = await fetch('/api/visitors');
+        if (res.ok) {
+          const data = await res.json();
+          document.getElementById('visitor-count').textContent = data.visitors + ' visitors';
+        }
+      } catch (_) {}
+      visitorsReady = true;
+      setProgress(68, 'visitors ready');
+      checkDone();
+    }
+
+    async function loadPresence(isInit) {
+      try {
+        if (isInit) setProgress(72, 'fetching presence');
+        const res = await fetch('/api/presence');
+        if (!res.ok) throw new Error();
+        const p = await res.json();
+
+        const activityRow  = document.getElementById('activity-row');
+        const activityText = document.getElementById('activity-text');
+        if (p.activity) {
+          activityRow.style.display = '';
+          activityText.textContent  = p.activity;
+        } else {
+          activityRow.style.display = 'none';
+        }
+
+        const label   = document.getElementById('np-label');
+        const song    = document.getElementById('np-song');
+        const artist  = document.getElementById('np-artist');
+        const art     = document.getElementById('np-art');
+        const bar     = document.getElementById('np-bar');
+        const barWrap = document.getElementById('np-bar-wrap');
+
+        if (p.is_listening && p.spotify_song) {
+          label.textContent  = 'now playing';
+          song.textContent   = p.spotify_song;
+          artist.textContent = p.spotify_artist;
+          if (p.spotify_album_art) {
+            art.src = p.spotify_album_art;
+            art.style.opacity = '1';
+          }
+          barWrap.style.opacity = '1';
+          const pct = Math.min(100, ((Date.now() - p.spotify_start) / (p.spotify_end - p.spotify_start)) * 100);
+          bar.style.width = pct + '%';
+        } else {
+          label.textContent     = 'not listening';
+          song.textContent      = '';
+          artist.textContent    = '';
+          art.style.opacity     = '0';
+          barWrap.style.opacity = '0';
+          bar.style.width       = '0%';
+        }
+      } catch (_) {}
+
+      if (isInit) {
+        presenceReady = true;
+        setProgress(95, 'presence ready');
+        checkDone();
+      }
+    }
+
+    loadVisitors();
+    loadPresence(true);
+    setInterval(() => loadPresence(false), 5000);
+
+    const featherColors = [
+      '#ffffff', '#e6e6e6', '#cecece', '#b5b5b5',
+      '#9d9d9d', '#cecece', '#e6e6e6', '#ffffff'
+    ];
+
+    function createFeatherSVG(color) {
+      return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 373.397 373.397" width="20" height="20">
+        <path fill="${color}" d="M366.473,10.998c-4.22-4.219-11.055-6.271-20.896-6.271c-10.171,0-22.384,2.159-33.16,4.064
+          c-2.172,0.385-4.3,0.761-6.356,1.109c-28.843,4.898-46.756,20.64-79.276,49.218c-3.368,2.959-6.902,6.064-10.63,9.319
+          l-1.433,1.251l-4.437,35.009L199.497,82.82l-4.882,4.107c-10.231,8.608-20.248,16.771-30.624,24.952
+          c-18.068,14.246-31.938,24.848-43.082,33.365c-4.233,3.236-8,6.115-11.352,8.702l-1.644,1.269l-3.122,24.634
+          l-7.93-16.081l-4.918,4.571c-10.878,10.109-11.113,15.868-10.605,27.931c0.283,6.743,0.185,20.014,0.08,34.063
+          c-0.193,25.914-0.141,40.64,0.298,49.269l-11.932,11.932l-0.08-31.974c-0.017-6.894-5.61-12.469-12.5-12.469
+          c-0.01,0-0.021,0-0.032,0c-6.904,0.018-12.486,5.628-12.469,12.531l0.143,56.848L1.963,359.354
+          c-2.536,2.535-2.07,4.954-1.566,6.171c0.791,1.91,2.653,3.145,4.744,3.145c1.25,0,2.289-0.445,2.962-0.78
+          l32.43-16.153c1.46-0.727,3.357-2.091,4.511-3.244l15.216-15.199l59.215-0.599
+          c6.903-0.069,12.443-5.723,12.373-12.625c-0.069-6.86-5.652-12.374-12.497-12.374c-0.042,0-0.086,0-0.129,0.001
+          l-33.677,0.341l12.314-12.3c5.474,0.279,13.445,0.428,25.231,0.428c7.783,0,16.033-0.062,24.01-0.121
+          c7.301-0.055,14.197-0.106,20.152-0.106c6.453,0,11.011,0.064,13.934,0.195c2.112,0.095,4.003,0.173,5.767,0.173
+          c0.001,0,0,0,0.001,0c14.905,0,19.33-5.789,43.875-37.908l3.692-4.831l-19.12-9.429l29.187-3.699l1.269-1.646
+          c6.682-8.666,13.137-16.945,19.734-25.312c18.048-22.891,33.467-40.796,47.44-56.735l4.295-4.898
+          l-26.774-13.203l43.029-5.453l1.257-1.487c18.252-21.585,28.875-37.587,32.731-60.294
+          c0.553-3.256,1.206-6.615,1.896-10.172C373.245,41.789,377.153,21.677,366.473,10.998z"/>
+      </svg>`;
+    }
+
+    function spawnFeather() {
+      const el = document.createElement('div');
+      el.classList.add('feather');
+      const color = featherColors[Math.floor(Math.random() * featherColors.length)];
+      el.innerHTML = createFeatherSVG(color);
+      const left     = Math.random() * 100;
+      const duration = 14 + Math.random() * 20;
+      const delay    = Math.random() * 5;
+      const sc       = 0.6 + Math.random() * 1.1;
+      const r0       = -30 + Math.random() * 60;
+      const r1       = r0 + (Math.random() - 0.5) * 80;
+      const sx       = (Math.random() - 0.5) * 60 + 'px';
+      const pk       = 0.2 + Math.random() * 0.35;
+      el.style.left = left + 'vw';
+      el.style.animationDuration = duration + 's';
+      el.style.animationDelay    = delay + 's';
+      el.style.setProperty('--sc', sc);
+      el.style.setProperty('--r0', r0 + 'deg');
+      el.style.setProperty('--r1', r1 + 'deg');
+      el.style.setProperty('--sx', sx);
+      el.style.setProperty('--pk', pk);
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), (duration + delay + 0.5) * 1000);
+    }
+
+    for (let i = 0; i < 18; i++) spawnFeather();
+    setInterval(spawnFeather, 1200);
   </script>
 
 </body>

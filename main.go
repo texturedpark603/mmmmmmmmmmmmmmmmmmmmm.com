@@ -4,7 +4,8 @@ import (
 	"log"
 	"net/http"
 
-	"m/api/lastfm"
+	"m/api/lanyard"
+	"m/api/visitors"
 	"m/config"
 	"m/middleware"
 )
@@ -12,13 +13,10 @@ import (
 func main() {
 	cfg := config.Load(".env")
 
-	if !cfg.Valid() {
-		log.Fatal("LASTFM_API_KEY is not set")
-	}
-
 	mux := http.NewServeMux()
 
-	mux.Handle("/api/now-playing", lastfm.NewHandler(cfg))
+	mux.HandleFunc("/api/presence", lanyard.Handler)
+	mux.Handle("/api/visitors", visitors.NewHandler("visitors.count"))
 
 	files := http.FileServer(http.Dir("./static"))
 	mux.Handle("/", files)
@@ -26,6 +24,7 @@ func main() {
 	handler := middleware.Chain(mux,
 		middleware.Logger,
 		middleware.CORS,
+		middleware.NoCache,
 	)
 
 	log.Printf("listening on http://localhost:%s", cfg.Port)
