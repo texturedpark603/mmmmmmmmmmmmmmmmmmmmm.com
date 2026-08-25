@@ -5,3 +5,4 @@
 *.env.*
 visitors.count
 msite
+cloudflared
