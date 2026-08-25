@@ -17,7 +17,7 @@
   <meta name="twitter:title" content="m">
   <meta name="twitter:description" content="i know too much">
   <meta name="twitter:image" content="https://mq6.pw/site.png">
-  <link rel="stylesheet" href="./css/index.css">
+  <link rel="stylesheet" href="/css/index.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -39,11 +39,28 @@
 
   <span class="visitor-count" id="visitor-count">—</span>
 
-  <main class="page" id="page" style="opacity:0">
+  <nav class="sidenav" id="sidenav" aria-label="Primary">
+    <span class="sidenav-indicator" id="sidenav-indicator"></span>
+    <a class="sidenav-btn" href="/" aria-label="Home" data-route="home">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
+    </a>
+    <a class="sidenav-btn" href="/music" aria-label="Music" data-route="music">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+    </a>
+    <a class="sidenav-btn" href="/projects" aria-label="Projects" data-route="projects">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+    </a>
+    <a class="sidenav-btn" href="/guestbook" aria-label="Guestbook" data-route="guestbook">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    </a>
+  </nav>
+
+  <!-- ── view: home ─────────────────────────────────────────── -->
+  <main class="page view" id="view-home" style="opacity:0">
 
     <header class="hero">
       <div class="avatar-wrap">
-        <img src="https://api.lanyard.rest/1442791669220249631.png" class="avatar" alt="avatar" id="avatar">
+        <img src="https://api.lanyard.rest/1442791669220249631.png" class="avatar" alt="avatar">
       </div>
       <div class="hero-text">
         <h1 class="name">m</h1>
@@ -57,8 +74,8 @@
       </div>
       <div class="np-info">
         <span class="np-label" id="np-label">not listening</span>
-        <span class="np-song" id="np-song"></span>
-        <span class="np-artist" id="np-artist"></span>
+        <a class="np-song" id="np-song" target="_blank" rel="noopener noreferrer"></a>
+        <a class="np-artist" id="np-artist" target="_blank" rel="noopener noreferrer"></a>
         <div class="np-bar-wrap" id="np-bar-wrap">
           <div class="np-bar" id="np-bar"></div>
         </div>
@@ -90,15 +107,74 @@
 
   </main>
 
+  <!-- ── view: music ───────────────────────────────────────── -->
+  <main class="page page--top view" id="view-music" style="display:none;opacity:0">
+    <header class="page-header">
+      <h1 class="page-title">music</h1>
+      <p class="page-sub">recent scrobbles from <a href="https://www.last.fm/user/QM" target="_blank" rel="noopener noreferrer" class="inline-link">last.fm</a></p>
+    </header>
+    <div class="track-list" id="track-list">
+      <div class="track-skeleton"></div>
+      <div class="track-skeleton"></div>
+      <div class="track-skeleton"></div>
+      <div class="track-skeleton"></div>
+      <div class="track-skeleton"></div>
+    </div>
+  </main>
+
+  <!-- ── view: projects ───────────────────────────────────── -->
+  <main class="page page--top view" id="view-projects" style="display:none;opacity:0">
+    <header class="page-header">
+      <h1 class="page-title">projects</h1>
+      <p class="page-sub">things i've built</p>
+    </header>
+    <div class="project-list">
+      <a class="project-card" href="https://mmmmmmmmmmmmmmmmmmmmm.com" target="_blank" rel="noopener noreferrer">
+        <div class="project-top">
+          <span class="project-name">mmmmmmmmmmmmmmmmmmmmm.com</span>
+          <span class="project-arrow">↗</span>
+        </div>
+        <p class="project-desc">this site. go + vanilla js, served over cloudflare tunnel.</p>
+        <div class="project-tags">
+          <span class="tag">go</span>
+          <span class="tag">html</span>
+          <span class="tag">css</span>
+        </div>
+      </a>
+    </div>
+  </main>
+
+  <!-- ── view: guestbook ──────────────────────────────────── -->
+  <main class="page page--top view" id="view-guestbook" style="display:none;opacity:0">
+    <header class="page-header">
+      <h1 class="page-title">guestbook</h1>
+      <p class="page-sub">leave a message</p>
+    </header>
+    <form class="gb-form" id="gb-form" autocomplete="off">
+      <div class="gb-fields">
+        <input class="gb-input" id="gb-name" type="text" placeholder="name" maxlength="40" required>
+        <textarea class="gb-input gb-textarea" id="gb-msg" placeholder="message" maxlength="300" rows="3" required></textarea>
+      </div>
+      <div class="gb-form-footer">
+        <span class="gb-hint" id="gb-hint"></span>
+        <button class="gb-submit" type="submit" id="gb-submit">post</button>
+      </div>
+    </form>
+    <div class="gb-list" id="gb-list">
+      <div class="track-skeleton"></div>
+      <div class="track-skeleton"></div>
+      <div class="track-skeleton"></div>
+    </div>
+  </main>
+
   <script>
+    // ── loader (runs once on first visit) ──────────────────────
     const loaderBar   = document.getElementById('loader-bar');
     const loaderLabel = document.getElementById('loader-label');
     const loader      = document.getElementById('loader');
-    const page        = document.getElementById('page');
 
     const MINIMUM_MS = 3200;
     const loadStart  = Date.now();
-
     let progress = 0;
 
     function setProgress(pct, label) {
@@ -109,31 +185,22 @@
 
     function finishLoading() {
       setProgress(100, 'done');
-      const elapsed   = Date.now() - loadStart;
-      const remaining = Math.max(0, MINIMUM_MS - elapsed);
+      const remaining = Math.max(0, MINIMUM_MS - (Date.now() - loadStart));
       setTimeout(() => {
         loader.classList.add('loader--out');
-        page.style.transition = 'opacity 0.6s ease';
-        page.style.opacity = '1';
         setTimeout(() => loader.remove(), 700);
       }, remaining + 200);
     }
 
-    let fontsReady    = false;
-    let visitorsReady = false;
-    let presenceReady = false;
-
-    function checkDone() {
-      if (fontsReady && visitorsReady && presenceReady) finishLoading();
-    }
+    let fontsReady = false, visitorsReady = false, presenceReady = false;
+    function checkDone() { if (fontsReady && visitorsReady && presenceReady) finishLoading(); }
 
     setProgress(3, 'loading');
     setTimeout(() => setProgress(10, 'loading fonts'), 200);
-
     document.fonts.ready.then(() => {
       fontsReady = true;
       setProgress(38, 'fonts ready');
-      setTimeout(() => checkDone(), 0);
+      checkDone();
     });
 
     async function loadVisitors() {
@@ -141,8 +208,8 @@
         setProgress(42, 'fetching visitors');
         const res = await fetch('/api/visitors');
         if (res.ok) {
-          const data = await res.json();
-          document.getElementById('visitor-count').textContent = data.visitors + ' visitors';
+          const d = await res.json();
+          document.getElementById('visitor-count').textContent = d.visitors + ' visitors';
         }
       } catch (_) {}
       visitorsReady = true;
@@ -150,21 +217,18 @@
       checkDone();
     }
 
+    // ── presence ───────────────────────────────────────────────
     async function loadPresence(isInit) {
       try {
         if (isInit) setProgress(72, 'fetching presence');
-        const res = await fetch('/api/presence');
+        const res = await fetch('/api/presence', { cache: 'no-store' });
         if (!res.ok) throw new Error();
         const p = await res.json();
 
         const activityRow  = document.getElementById('activity-row');
         const activityText = document.getElementById('activity-text');
-        if (p.activity) {
-          activityRow.style.display = '';
-          activityText.textContent  = p.activity;
-        } else {
-          activityRow.style.display = 'none';
-        }
+        if (p.activity) { activityRow.style.display = ''; activityText.textContent = p.activity; }
+        else             { activityRow.style.display = 'none'; }
 
         const label   = document.getElementById('np-label');
         const song    = document.getElementById('np-song');
@@ -174,90 +238,242 @@
         const barWrap = document.getElementById('np-bar-wrap');
 
         if (p.is_listening && p.spotify_song) {
-          label.textContent  = 'now playing';
-          song.textContent   = p.spotify_song;
+          label.textContent = p.now_playing_label || 'now playing';
+          song.textContent  = p.spotify_song;
+          if (p.now_playing_url) { song.href = p.now_playing_url; song.style.cursor = 'pointer'; }
+          else { song.removeAttribute('href'); song.style.cursor = 'default'; }
           artist.textContent = p.spotify_artist;
-          if (p.spotify_album_art) {
-            art.src = p.spotify_album_art;
-            art.style.opacity = '1';
-          }
-          barWrap.style.opacity = '1';
-          const pct = Math.min(100, ((Date.now() - p.spotify_start) / (p.spotify_end - p.spotify_start)) * 100);
-          bar.style.width = pct + '%';
+          if (p.artist_url) { artist.href = p.artist_url; artist.style.cursor = 'pointer'; }
+          else { artist.removeAttribute('href'); artist.style.cursor = 'default'; }
+          if (p.spotify_album_art) { art.src = p.spotify_album_art; art.style.opacity = '1'; }
+          if (p.spotify_end > p.spotify_start) {
+            barWrap.style.opacity = '1';
+            bar.style.width = Math.min(100, ((Date.now() - p.spotify_start) / (p.spotify_end - p.spotify_start)) * 100) + '%';
+          } else { barWrap.style.opacity = '0'; bar.style.width = '0%'; }
         } else {
-          label.textContent     = 'not listening';
-          song.textContent      = '';
-          artist.textContent    = '';
-          art.style.opacity     = '0';
-          barWrap.style.opacity = '0';
-          bar.style.width       = '0%';
+          label.textContent = 'not listening';
+          song.textContent  = ''; song.removeAttribute('href');
+          artist.textContent = ''; artist.removeAttribute('href');
+          art.style.opacity = '0'; barWrap.style.opacity = '0'; bar.style.width = '0%';
         }
       } catch (_) {}
-
-      if (isInit) {
-        presenceReady = true;
-        setProgress(95, 'presence ready');
-        checkDone();
-      }
+      if (isInit) { presenceReady = true; setProgress(95, 'presence ready'); checkDone(); }
     }
 
     loadVisitors();
     loadPresence(true);
     setInterval(() => loadPresence(false), 5000);
 
-    const featherColors = [
-      '#ffffff', '#e6e6e6', '#cecece', '#b5b5b5',
-      '#9d9d9d', '#cecece', '#e6e6e6', '#ffffff'
-    ];
+    // ── router ─────────────────────────────────────────────────
+    const ROUTES = ['home', 'music', 'projects', 'guestbook'];
+    let currentRoute = null;
+    let musicLoaded  = false;
+    let gbLoaded     = false;
 
-    function createFeatherSVG(color) {
-      return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 373.397 373.397" width="20" height="20">
-        <path fill="${color}" d="M366.473,10.998c-4.22-4.219-11.055-6.271-20.896-6.271c-10.171,0-22.384,2.159-33.16,4.064
-          c-2.172,0.385-4.3,0.761-6.356,1.109c-28.843,4.898-46.756,20.64-79.276,49.218c-3.368,2.959-6.902,6.064-10.63,9.319
-          l-1.433,1.251l-4.437,35.009L199.497,82.82l-4.882,4.107c-10.231,8.608-20.248,16.771-30.624,24.952
-          c-18.068,14.246-31.938,24.848-43.082,33.365c-4.233,3.236-8,6.115-11.352,8.702l-1.644,1.269l-3.122,24.634
-          l-7.93-16.081l-4.918,4.571c-10.878,10.109-11.113,15.868-10.605,27.931c0.283,6.743,0.185,20.014,0.08,34.063
-          c-0.193,25.914-0.141,40.64,0.298,49.269l-11.932,11.932l-0.08-31.974c-0.017-6.894-5.61-12.469-12.5-12.469
-          c-0.01,0-0.021,0-0.032,0c-6.904,0.018-12.486,5.628-12.469,12.531l0.143,56.848L1.963,359.354
-          c-2.536,2.535-2.07,4.954-1.566,6.171c0.791,1.91,2.653,3.145,4.744,3.145c1.25,0,2.289-0.445,2.962-0.78
-          l32.43-16.153c1.46-0.727,3.357-2.091,4.511-3.244l15.216-15.199l59.215-0.599
-          c6.903-0.069,12.443-5.723,12.373-12.625c-0.069-6.86-5.652-12.374-12.497-12.374c-0.042,0-0.086,0-0.129,0.001
-          l-33.677,0.341l12.314-12.3c5.474,0.279,13.445,0.428,25.231,0.428c7.783,0,16.033-0.062,24.01-0.121
-          c7.301-0.055,14.197-0.106,20.152-0.106c6.453,0,11.011,0.064,13.934,0.195c2.112,0.095,4.003,0.173,5.767,0.173
-          c0.001,0,0,0,0.001,0c14.905,0,19.33-5.789,43.875-37.908l3.692-4.831l-19.12-9.429l29.187-3.699l1.269-1.646
-          c6.682-8.666,13.137-16.945,19.734-25.312c18.048-22.891,33.467-40.796,47.44-56.735l4.295-4.898
-          l-26.774-13.203l43.029-5.453l1.257-1.487c18.252-21.585,28.875-37.587,32.731-60.294
-          c0.553-3.256,1.206-6.615,1.896-10.172C373.245,41.789,377.153,21.677,366.473,10.998z"/>
-      </svg>`;
+    function routeFromPath(path) {
+      if (path === '/' || path === '') return 'home';
+      const seg = path.replace(/^\//, '').split('/')[0];
+      return ROUTES.includes(seg) ? seg : 'home';
     }
 
+    function navigate(route, pushState = true) {
+      if (route === currentRoute) return;
+
+      // hide current
+      if (currentRoute) {
+        const prev = document.getElementById('view-' + currentRoute);
+        prev.style.opacity = '0';
+        setTimeout(() => { prev.style.display = 'none'; }, 200);
+      }
+
+      currentRoute = route;
+
+      // update nav active state
+      document.querySelectorAll('.sidenav-btn').forEach(btn => {
+        btn.classList.toggle('sidenav-btn--active', btn.dataset.route === route);
+      });
+      // reposition indicator to new active btn
+      requestAnimationFrame(() => {
+        const active = document.querySelector('.sidenav-btn--active');
+        if (active) moveIndicator(active);
+      });
+
+      // show next view
+      const next = document.getElementById('view-' + route);
+      next.style.display = '';
+      requestAnimationFrame(() => {
+        next.style.transition = 'opacity 0.25s ease';
+        next.style.opacity = '1';
+      });
+
+      // push history
+      const url = route === 'home' ? '/' : '/' + route;
+      if (pushState) history.pushState({ route }, '', url);
+      document.title = route === 'home' ? 'm' : route + ' — m';
+
+      // lazy-load data
+      if (route === 'music' && !musicLoaded) { musicLoaded = true; loadTracks(); }
+      if (route === 'guestbook' && !gbLoaded) { gbLoaded = true; loadGuestbook(); }
+    }
+
+    // intercept nav clicks
+    document.getElementById('sidenav').addEventListener('click', e => {
+      const btn = e.target.closest('[data-route]');
+      if (!btn) return;
+      e.preventDefault();
+      navigate(btn.dataset.route);
+    });
+
+    // back/forward
+    window.addEventListener('popstate', e => {
+      const route = (e.state && e.state.route) || routeFromPath(location.pathname);
+      navigate(route, false);
+    });
+
+    // ── music ──────────────────────────────────────────────────
+    async function loadTracks() {
+      const list = document.getElementById('track-list');
+      try {
+        const res = await fetch('/api/lastfm?limit=30', { cache: 'no-store' });
+        if (!res.ok) throw new Error();
+        const tracks = await res.json();
+        list.innerHTML = '';
+        tracks.forEach(t => {
+          const row = document.createElement('a');
+          row.className = 'track-row';
+          row.href = t.url || '#';
+          row.target = '_blank';
+          row.rel = 'noopener noreferrer';
+          row.innerHTML = `
+            <div class="track-art-wrap">
+              ${t.art ? `<img class="track-art" src="${t.art}" alt="" loading="lazy">` : `<div class="track-art track-art--empty"></div>`}
+              ${t.now_playing ? '<span class="track-live"></span>' : ''}
+            </div>
+            <div class="track-info">
+              <span class="track-name">${esc(t.name)}</span>
+              <span class="track-artist">${esc(t.artist)}</span>
+            </div>
+            <span class="track-time">${t.now_playing ? 'now' : esc(t.played_at)}</span>`;
+          list.appendChild(row);
+        });
+      } catch (_) {
+        list.innerHTML = '<span class="empty-note">could not load tracks</span>';
+      }
+    }
+
+    // ── guestbook ──────────────────────────────────────────────
+    async function loadGuestbook() {
+      const list = document.getElementById('gb-list');
+      try {
+        const res = await fetch('/api/guestbook', { cache: 'no-store' });
+        if (!res.ok) throw new Error();
+        const entries = await res.json();
+        list.innerHTML = '';
+        if (!entries.length) { list.innerHTML = '<span class="empty-note">no entries yet — be the first</span>'; return; }
+        entries.forEach(e => {
+          const el = document.createElement('div');
+          el.className = 'gb-entry';
+          const when = new Date(e.at).toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+          el.innerHTML = `
+            <div class="gb-entry-top">
+              <span class="gb-name">${esc(e.name)}</span>
+              <span class="gb-date">${when}</span>
+            </div>
+            <p class="gb-message">${esc(e.message)}</p>`;
+          list.appendChild(el);
+        });
+      } catch (_) {
+        list.innerHTML = '<span class="empty-note">could not load entries</span>';
+      }
+    }
+
+    document.getElementById('gb-form').addEventListener('submit', async e => {
+      e.preventDefault();
+      const name    = document.getElementById('gb-name').value.trim();
+      const message = document.getElementById('gb-msg').value.trim();
+      const hint    = document.getElementById('gb-hint');
+      const submit  = document.getElementById('gb-submit');
+      if (!name || !message) return;
+      submit.disabled = true; submit.textContent = '...'; hint.textContent = '';
+      try {
+        const res = await fetch('/api/guestbook', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, message })
+        });
+        if (res.status === 201) {
+          document.getElementById('gb-form').reset();
+          hint.textContent = 'posted.';
+          gbLoaded = false;
+          await loadGuestbook();
+          gbLoaded = true;
+        } else {
+          hint.textContent = (await res.text()).trim() || 'something went wrong';
+        }
+      } catch (_) { hint.textContent = 'network error'; }
+      submit.disabled = false; submit.textContent = 'post';
+    });
+
+    // ── feathers ───────────────────────────────────────────────
+    const featherColors = ['#ffffff','#e6e6e6','#cecece','#b5b5b5','#9d9d9d','#cecece','#e6e6e6','#ffffff'];
+    function createFeatherSVG(c) {
+      return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 373.397 373.397" width="20" height="20"><path fill="${c}" d="M366.473,10.998c-4.22-4.219-11.055-6.271-20.896-6.271c-10.171,0-22.384,2.159-33.16,4.064c-2.172,0.385-4.3,0.761-6.356,1.109c-28.843,4.898-46.756,20.64-79.276,49.218c-3.368,2.959-6.902,6.064-10.63,9.319l-1.433,1.251l-4.437,35.009L199.497,82.82l-4.882,4.107c-10.231,8.608-20.248,16.771-30.624,24.952c-18.068,14.246-31.938,24.848-43.082,33.365c-4.233,3.236-8,6.115-11.352,8.702l-1.644,1.269l-3.122,24.634l-7.93-16.081l-4.918,4.571c-10.878,10.109-11.113,15.868-10.605,27.931c0.283,6.743,0.185,20.014,0.08,34.063c-0.193,25.914-0.141,40.64,0.298,49.269l-11.932,11.932l-0.08-31.974c-0.017-6.894-5.61-12.469-12.5-12.469c-0.01,0-0.021,0-0.032,0c-6.904,0.018-12.486,5.628-12.469,12.531l0.143,56.848L1.963,359.354c-2.536,2.535-2.07,4.954-1.566,6.171c0.791,1.91,2.653,3.145,4.744,3.145c1.25,0,2.289-0.445,2.962-0.78l32.43-16.153c1.46-0.727,3.357-2.091,4.511-3.244l15.216-15.199l59.215-0.599c6.903-0.069,12.443-5.723,12.373-12.625c-0.069-6.86-5.652-12.374-12.497-12.374c-0.042,0-0.086,0-0.129,0.001l-33.677,0.341l12.314-12.3c5.474,0.279,13.445,0.428,25.231,0.428c7.783,0,16.033-0.062,24.01-0.121c7.301-0.055,14.197-0.106,20.152-0.106c6.453,0,11.011,0.064,13.934,0.195c2.112,0.095,4.003,0.173,5.767,0.173c0.001,0,0,0,0.001,0c14.905,0,19.33-5.789,43.875-37.908l3.692-4.831l-19.12-9.429l29.187-3.699l1.269-1.646c6.682-8.666,13.137-16.945,19.734-25.312c18.048-22.891,33.467-40.796,47.44-56.735l4.295-4.898l-26.774-13.203l43.029-5.453l1.257-1.487c18.252-21.585,28.875-37.587,32.731-60.294c0.553-3.256,1.206-6.615,1.896-10.172C373.245,41.789,377.153,21.677,366.473,10.998z"/></svg>`;
+    }
     function spawnFeather() {
       const el = document.createElement('div');
       el.classList.add('feather');
-      const color = featherColors[Math.floor(Math.random() * featherColors.length)];
-      el.innerHTML = createFeatherSVG(color);
-      const left     = Math.random() * 100;
-      const duration = 14 + Math.random() * 20;
-      const delay    = Math.random() * 5;
-      const sc       = 0.6 + Math.random() * 1.1;
-      const r0       = -30 + Math.random() * 60;
-      const r1       = r0 + (Math.random() - 0.5) * 80;
-      const sx       = (Math.random() - 0.5) * 60 + 'px';
-      const pk       = 0.2 + Math.random() * 0.35;
-      el.style.left = left + 'vw';
-      el.style.animationDuration = duration + 's';
+      el.innerHTML = createFeatherSVG(featherColors[Math.floor(Math.random() * featherColors.length)]);
+      const dur = 14 + Math.random() * 20, delay = Math.random() * 5;
+      el.style.left = Math.random() * 100 + 'vw';
+      el.style.animationDuration = dur + 's';
       el.style.animationDelay    = delay + 's';
-      el.style.setProperty('--sc', sc);
+      el.style.setProperty('--sc', 0.6 + Math.random() * 1.1);
+      const r0 = -30 + Math.random() * 60;
       el.style.setProperty('--r0', r0 + 'deg');
-      el.style.setProperty('--r1', r1 + 'deg');
-      el.style.setProperty('--sx', sx);
-      el.style.setProperty('--pk', pk);
+      el.style.setProperty('--r1', (r0 + (Math.random() - 0.5) * 80) + 'deg');
+      el.style.setProperty('--sx', (Math.random() - 0.5) * 60 + 'px');
+      el.style.setProperty('--pk', 0.2 + Math.random() * 0.35);
       document.body.appendChild(el);
-      setTimeout(() => el.remove(), (duration + delay + 0.5) * 1000);
+      setTimeout(() => el.remove(), (dur + delay + 0.5) * 1000);
     }
-
     for (let i = 0; i < 18; i++) spawnFeather();
     setInterval(spawnFeather, 1200);
+
+    // ── sidenav indicator ──────────────────────────────────────
+    const sidenav   = document.getElementById('sidenav');
+    const indicator = document.getElementById('sidenav-indicator');
+
+    function moveIndicator(btn) {
+      const nr = sidenav.getBoundingClientRect(), br = btn.getBoundingClientRect();
+      indicator.style.width  = br.width  + 'px';
+      indicator.style.height = br.height + 'px';
+      indicator.style.left   = (br.left - nr.left) + 'px';
+      indicator.style.top    = (br.top  - nr.top)  + 'px';
+    }
+
+    document.querySelectorAll('.sidenav-btn').forEach(b => {
+      b.addEventListener('mouseenter', () => moveIndicator(b));
+    });
+    sidenav.addEventListener('mouseleave', () => {
+      const active = document.querySelector('.sidenav-btn--active');
+      if (active) moveIndicator(active);
+    });
+    window.addEventListener('resize', () => {
+      const active = document.querySelector('.sidenav-btn--active');
+      if (active) moveIndicator(active);
+    });
+
+    // ── utils ──────────────────────────────────────────────────
+    function esc(s) {
+      return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // ── boot ───────────────────────────────────────────────────
+    // show the correct view based on current URL, no page load
+    const initRoute = routeFromPath(location.pathname);
+    // show home view immediately so loader can fade out over it
+    document.getElementById('view-home').style.opacity = '1';
+    navigate(initRoute, false);
   </script>
 
 </body>

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>music — m</title>
+  <link rel="icon" href="https://mq6.pw/feather.png">
+  <meta name="theme-color" content="#0a0a0a">
+  <link rel="stylesheet" href="./css/index.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <nav class="sidenav" id="sidenav" aria-label="Primary">
+    <span class="sidenav-indicator" id="sidenav-indicator"></span>
+    <a class="sidenav-btn" href="/" aria-label="Home">
+      <!-- house -->
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
+    </a>
+    <a class="sidenav-btn sidenav-btn--active" href="/music.html" aria-label="Music">
+      <!-- music note -->
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+    </a>
+    <a class="sidenav-btn" href="/projects.html" aria-label="Projects">
+      <!-- folder -->
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+    </a>
+    <a class="sidenav-btn" href="/guestbook.html" aria-label="Guestbook">
+      <!-- message square -->
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    </a>
+  </nav>
+
+  <main class="page page--top" id="page" style="opacity:0">
+    <header class="page-header">
+      <h1 class="page-title">music</h1>
+      <p class="page-sub">recent scrobbles from <a href="https://www.last.fm/user/QM" target="_blank" rel="noopener noreferrer" class="inline-link">last.fm</a></p>
+    </header>
+
+    <div class="track-list" id="track-list">
+      <div class="track-skeleton" aria-hidden="true"></div>
+      <div class="track-skeleton" aria-hidden="true"></div>
+      <div class="track-skeleton" aria-hidden="true"></div>
+      <div class="track-skeleton" aria-hidden="true"></div>
+      <div class="track-skeleton" aria-hidden="true"></div>
+    </div>
+  </main>
+
+  <script>
+    const page = document.getElementById('page');
+    const list = document.getElementById('track-list');
+
+    async function loadTracks() {
+      try {
+        const res = await fetch('/api/lastfm?limit=30', { cache: 'no-store' });
+        if (!res.ok) throw new Error();
+        const tracks = await res.json();
+        list.innerHTML = '';
+        tracks.forEach(t => {
+          const row = document.createElement('a');
+          row.className = 'track-row';
+          row.href = t.url || '#';
+          row.target = '_blank';
+          row.rel = 'noopener noreferrer';
+          row.innerHTML = `
+            <div class="track-art-wrap">
+              ${t.art
+                ? `<img class="track-art" src="${t.art}" alt="" loading="lazy">`
+                : `<div class="track-art track-art--empty"></div>`}
+              ${t.now_playing ? '<span class="track-live"></span>' : ''}
+            </div>
+            <div class="track-info">
+              <span class="track-name">${esc(t.name)}</span>
+              <span class="track-artist">${esc(t.artist)}</span>
+            </div>
+            <span class="track-time">${t.now_playing ? 'now' : esc(t.played_at)}</span>
+          `;
+          list.appendChild(row);
+        });
+      } catch (_) {
+        list.innerHTML = '<span class="empty-note">could not load tracks</span>';
+      }
+      page.style.transition = 'opacity 0.5s ease';
+      page.style.opacity = '1';
+    }
+
+    function esc(s) {
+      return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    loadTracks();
+    initSidenav();
+
+    function initSidenav() {
+      const btns      = document.querySelectorAll('.sidenav-btn');
+      const indicator = document.getElementById('sidenav-indicator');
+      const nav       = document.getElementById('sidenav');
+      function move(btn) {
+        const nr = nav.getBoundingClientRect(), br = btn.getBoundingClientRect();
+        indicator.style.width  = br.width  + 'px';
+        indicator.style.height = br.height + 'px';
+        indicator.style.left   = (br.left - nr.left) + 'px';
+        indicator.style.top    = (br.top  - nr.top)  + 'px';
+      }
+      const active = document.querySelector('.sidenav-btn--active');
+      if (active) requestAnimationFrame(() => move(active));
+      btns.forEach(b => b.addEventListener('mouseenter', () => move(b)));
+      nav.addEventListener('mouseleave', () => { if (active) move(active); });
+      window.addEventListener('resize',  () => { if (active) move(active); });
+    }
+  </script>
+</body>
+</html>
